@@ -1,5 +1,5 @@
-import type { Entry } from "../fetchData";
-import type { DistanceStatsBoxEntry } from "./DistanceStatsBoxEntry";
+import type { Entry } from "../fetchData.js";
+import type { DistanceStatsBoxEntry } from "./DistanceStatsBoxEntry.js";
 
 export function sumFor(data: Entry[]): DistanceStatsBoxEntry {
 	return data.reduce(

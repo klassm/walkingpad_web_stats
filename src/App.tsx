@@ -1,7 +1,7 @@
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Main } from "./Main/Main";
+import { Main } from "./Main/Main.js";
 
 const queryClient = new QueryClient();
 

@@ -8,10 +8,10 @@ import {
 } from "@mui/material";
 import { DateTime } from "luxon";
 import { type FC, useState } from "react";
-import { useData } from "../fetchData";
-import { MonthPicker } from "../MonthPicker/MonthPicker";
-import { StatsContent } from "../stats/StatsContent/StatsContent";
-import { Content } from "./Main.styles";
+import { useData } from "../fetchData.js";
+import { MonthPicker } from "../MonthPicker/MonthPicker.js";
+import { StatsContent } from "../stats/StatsContent/StatsContent.js";
+import { Content } from "./Main.styles.js";
 
 export const Main: FC = () => {
 	const { isLoading, data } = useData();

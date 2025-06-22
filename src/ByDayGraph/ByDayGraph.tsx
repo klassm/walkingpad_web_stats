@@ -9,7 +9,7 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
-import type { Entry } from "../fetchData";
+import type { Entry } from "../fetchData.js";
 
 export interface Props {
 	data: Entry[];

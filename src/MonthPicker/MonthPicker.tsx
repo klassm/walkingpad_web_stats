@@ -1,7 +1,7 @@
 import { DatePicker } from "@mui/x-date-pickers";
 import { DateTime } from "luxon";
 import type { FC } from "react";
-import { MonthPickerContainer } from "./MonthPicker.styles";
+import { MonthPickerContainer } from "./MonthPicker.styles.js";
 
 interface Props {
 	value: DateTime;

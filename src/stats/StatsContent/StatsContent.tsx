@@ -1,13 +1,13 @@
 import { DateTime } from "luxon";
 import { type FC, useMemo } from "react";
-import { ByDayGraph } from "../../ByDayGraph/ByDayGraph";
-import { ByMonthGraph } from "../../ByMonthGraph/ByMonthGraph";
-import type { Entry } from "../../fetchData";
-import { StatsBar } from "../StatsBar/StatsBar";
-import { StatsGroup } from "../StatsGroup/StatsGroup";
-import { AverageStatsBox } from "../statsBoxes/AverageStepsBox/AverageStatsBox";
-import { TopDayStatsBox } from "../statsBoxes/TopDayStatsBox/TopDayStatsBox";
-import { TotalStatsBox } from "../statsBoxes/TotalStatsBox/TotalStatsBox";
+import { ByDayGraph } from "../../ByDayGraph/ByDayGraph.js";
+import { ByMonthGraph } from "../../ByMonthGraph/ByMonthGraph.js";
+import type { Entry } from "../../fetchData.js";
+import { StatsBar } from "../StatsBar/StatsBar.js";
+import { StatsGroup } from "../StatsGroup/StatsGroup.js";
+import { AverageStatsBox } from "../statsBoxes/AverageStepsBox/AverageStatsBox.js";
+import { TopDayStatsBox } from "../statsBoxes/TopDayStatsBox/TopDayStatsBox.js";
+import { TotalStatsBox } from "../statsBoxes/TotalStatsBox/TotalStatsBox.js";
 
 export interface StatsContentProps {
 	data: Entry[];

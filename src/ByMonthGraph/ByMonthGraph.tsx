@@ -11,8 +11,8 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
-import type { Entry } from "../fetchData";
-import { sumFor } from "../utils/sumFor";
+import type { Entry } from "../fetchData.js";
+import { sumFor } from "../utils/sumFor.js";
 
 export interface Props {
 	data: Entry[];

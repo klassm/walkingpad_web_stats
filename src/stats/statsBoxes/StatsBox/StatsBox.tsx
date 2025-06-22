@@ -1,6 +1,6 @@
 import { CardContent, Typography } from "@mui/material";
 import type { FC } from "react";
-import { StyledCard, StyledDate, StyledTitle } from "./StatsBox.styles";
+import { StyledCard, StyledDate, StyledTitle } from "./StatsBox.styles.js";
 
 interface Props {
 	title: string;

@@ -1,8 +1,8 @@
 import { maxBy } from "lodash";
 import { type FC, useMemo } from "react";
-import type { Entry } from "../../../fetchData";
-import { formatDate } from "../../../utils/formatDate";
-import { DistanceStatsBox } from "../DistanceStatsBox/DistanceStatsBox";
+import type { Entry } from "../../../fetchData.js";
+import { formatDate } from "../../../utils/formatDate.js";
+import { DistanceStatsBox } from "../DistanceStatsBox/DistanceStatsBox.js";
 
 interface Props {
 	title: string;

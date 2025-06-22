@@ -1,6 +1,6 @@
 import type { FC } from "react";
-import type { DistanceStatsBoxEntry } from "../../../utils/DistanceStatsBoxEntry";
-import { StatsBox } from "../StatsBox/StatsBox";
+import type { DistanceStatsBoxEntry } from "../../../utils/DistanceStatsBoxEntry.js";
+import { StatsBox } from "../StatsBox/StatsBox.js";
 
 interface Props {
 	title: string;

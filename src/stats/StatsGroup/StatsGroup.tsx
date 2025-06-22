@@ -1,5 +1,5 @@
 import type { FC, PropsWithChildren } from "react";
-import { GroupContainer, StyledTitle } from "./StatsGroup.styles";
+import { GroupContainer, StyledTitle } from "./StatsGroup.styles.js";
 
 interface StatsGroupProps {
 	title: string;

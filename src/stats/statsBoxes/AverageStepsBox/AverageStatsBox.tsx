@@ -1,7 +1,7 @@
 import { sumBy } from "lodash";
 import { type FC, useMemo } from "react";
-import type { Entry } from "../../../fetchData";
-import { StatsBox } from "../StatsBox/StatsBox";
+import type { Entry } from "../../../fetchData.js";
+import { StatsBox } from "../StatsBox/StatsBox.js";
 
 interface Props {
 	title: string;

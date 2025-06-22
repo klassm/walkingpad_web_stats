@@ -1,7 +1,7 @@
 import { type FC, useMemo } from "react";
-import type { Entry } from "../../../fetchData";
-import { sumFor } from "../../../utils/sumFor";
-import { DistanceStatsBox } from "../DistanceStatsBox/DistanceStatsBox";
+import type { Entry } from "../../../fetchData.js";
+import { sumFor } from "../../../utils/sumFor.js";
+import { DistanceStatsBox } from "../DistanceStatsBox/DistanceStatsBox.js";
 
 interface Props {
 	title: string;
