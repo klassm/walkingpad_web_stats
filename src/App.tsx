@@ -1,14 +1,14 @@
 import React from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import DateAdapter from '@mui/lab/AdapterLuxon';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { Main } from './Main/Main';
 
 const queryClient = new QueryClient()
 
 function App() {
   return (
-    <LocalizationProvider dateAdapter={ DateAdapter }>
+    <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="de">
       <QueryClientProvider client={ queryClient }>
         <Main/>
       </QueryClientProvider>

@@ -1,8 +1,9 @@
-import { DatePicker } from "@mui/lab";
-import TextField from "@mui/material/TextField";
+import { DatePicker } from "@mui/x-date-pickers";
+
 import { DateTime } from "luxon";
 import { FC } from "react";
 import { MonthPickerContainer } from "./MonthPicker.styles";
+import { TextField } from "@mui/material";
 
 interface Props {
   value: DateTime,
@@ -13,14 +14,15 @@ interface Props {
 export const MonthPicker: FC<Props> = ({ value, min, onChange }) => {
   return (
     <MonthPickerContainer>
-      <DatePicker<DateTime>
+      <DatePicker
         views={ ['year', 'month'] }
         label="Month"
         minDate={ min }
         maxDate={ DateTime.local() }
         value={ value }
         onChange={ (newDate) => onChange(newDate ?? DateTime.local()) }
-        renderInput={ (params) => <TextField variant="standard" { ...params } helperText={ null }/> }
+        disableFuture
+        slotProps={{ textField: { size: 'small', variant: 'standard' } }}
       />
     </MonthPickerContainer>
   )

@@ -10,7 +10,6 @@ export const Main: FC = () => {
   const { isLoading, data } = useData();
   const [month, setMonth] = useState(DateTime.local());
 
-
   if (isLoading || !data) {
     return <CircularProgress variant="indeterminate"/>
   }

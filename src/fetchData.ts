@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { DateTime } from "luxon";
 import axios from "axios";
 import { keyBy, last, sortBy } from "lodash";
@@ -18,7 +18,7 @@ interface RawEntry {
 const dateFormat = "yyyy-MM-dd";
 
 export function useData() {
-  return useQuery("treadmill-data", fetchData);
+  return useQuery({queryKey: ["treadmill-data"], initialData: null, queryFn: fetchData});
 }
 
 function fillMissingEntries(entries: RawEntry[]): RawEntry[] {
