@@ -1,0 +1,15 @@
+name: Build
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: npm ci
+      - name: Build
+        run: npx tsc && npm run build

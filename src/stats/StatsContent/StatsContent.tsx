@@ -9,11 +9,11 @@ import { TopDayStatsBox } from "../statsBoxes/TopDayStatsBox/TopDayStatsBox";
 import { TotalStatsBox } from "../statsBoxes/TotalStatsBox/TotalStatsBox";
 import { StatsGroup } from "../StatsGroup/StatsGroup";
 
-export interface Props {
+export interface StatsContentProps {
   data: Entry[]
   month: DateTime
 }
-export const StatsContent: FC<Props> = ({ data, month: selectedMonth }) => {
+export const StatsContent: FC<StatsContentProps> = ({ data, month: selectedMonth }) => {
   const monthData = useMemo(() =>
       data.filter(entry => entry.date.year === selectedMonth.year && entry.date.month === selectedMonth.month),
     [data, selectedMonth]
