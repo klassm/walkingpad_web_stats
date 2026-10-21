@@ -1,5 +1,6 @@
 import type { FC } from "react";
 import type { DistanceStatsBoxEntry } from "../../../utils/DistanceStatsBoxEntry.js";
+import { formatDistance, formatNumber } from "../../../utils/formatDistance.js";
 import { StatsBox } from "../StatsBox/StatsBox.js";
 
 interface Props {
@@ -17,8 +18,8 @@ export const DistanceStatsBox: FC<Props> = ({ title, entry, date }) => {
 			title={title}
 			date={date ?? ""}
 			entries={[
-				`${Math.round(entry.steps)} steps`,
-				`${Math.round(entry.distance)} meters`,
+				`${formatNumber(Math.round(entry.steps))} steps`,
+				formatDistance(entry.distance),
 			]}
 		/>
 	);

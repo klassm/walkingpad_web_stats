@@ -1,7 +1,3 @@
-import styled from "@emotion/styled";
+import { Box, styled } from "@mui/material";
 
-export const MonthPickerContainer = styled.div`
-  background: white;
-  border-radius: 10px;
-  padding: 5px 10px;
-`;
+export const MonthPickerContainer = styled(Box)({});

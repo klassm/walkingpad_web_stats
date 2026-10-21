@@ -1,6 +1,7 @@
 import { sumBy } from "lodash";
 import { type FC, useMemo } from "react";
 import type { Entry } from "../../../fetchData.js";
+import { formatDistance, formatNumber } from "../../../utils/formatDistance.js";
 import { StatsBox } from "../StatsBox/StatsBox.js";
 
 interface Props {
@@ -15,8 +16,9 @@ export const AverageStatsBox: FC<Props> = ({ title, data }) => {
 		const totalMeters = sumBy(data, (value) => value.distance);
 
 		return {
-			averageSteps: Math.round(totalSteps / walkingDays),
-			averageMeters: Math.round(totalMeters / walkingDays),
+			averageSteps: walkingDays > 0 ? Math.round(totalSteps / walkingDays) : 0,
+			averageMeters:
+				walkingDays > 0 ? Math.round(totalMeters / walkingDays) : 0,
 			walkingDays,
 		};
 	}, [data]);
@@ -25,8 +27,8 @@ export const AverageStatsBox: FC<Props> = ({ title, data }) => {
 			title={title}
 			entries={[
 				`Out of ${walkingDays} walking days ...`,
-				`${averageSteps} steps / walking day`,
-				`${averageMeters} meters / walking day`,
+				`${formatNumber(averageSteps)} steps / walking day`,
+				`${formatDistance(averageMeters)} / walking day`,
 			]}
 		/>
 	);

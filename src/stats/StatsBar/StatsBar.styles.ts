@@ -1,6 +1,7 @@
-import styled from "@emotion/styled";
+import { Box, styled } from "@mui/material";
 
-export const StyledStatsTopBar = styled.div`
-  display: flex;
-  gap: 5px;
-`;
+export const StyledStatsTopBar = styled(Box)({
+	display: "flex",
+	flexWrap: "wrap",
+	gap: 16,
+});

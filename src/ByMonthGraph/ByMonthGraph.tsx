@@ -1,3 +1,4 @@
+import { Paper, useTheme } from "@mui/material";
 import { groupBy, mapValues, maxBy, sortBy } from "lodash";
 import { DateTime } from "luxon";
 import { type FC, useMemo } from "react";
@@ -12,6 +13,7 @@ import {
 	YAxis,
 } from "recharts";
 import type { Entry } from "../fetchData.js";
+import { chartPalette } from "../theme/theme.js";
 import { sumFor } from "../utils/sumFor.js";
 
 export interface Props {
@@ -23,9 +25,12 @@ interface ViewableEntry {
 	averageSteps: number;
 	topSteps: number;
 	month: string;
+	walkingDays: number;
 }
 
 export const ByMonthGraph: FC<Props> = ({ data }) => {
+	const theme = useTheme();
+
 	const viewableEntries: ViewableEntry[] = useMemo(() => {
 		const minDate = DateTime.now().minus({ month: 13 });
 		const relevantData = data
@@ -51,57 +56,99 @@ export const ByMonthGraph: FC<Props> = ({ data }) => {
 		return sortBy(allEntries, (entry) => entry.month);
 	}, [data]);
 
+	const axisTick = { fontSize: 12, fill: theme.palette.text.secondary };
+	const tooltipStyle = {
+		backgroundColor: theme.palette.background.paper,
+		border: `1px solid ${theme.palette.divider}`,
+		borderRadius: 10,
+		fontSize: 13,
+		color: theme.palette.text.primary,
+	};
+
 	return (
-		<ResponsiveContainer height={300}>
-			<LineChart
-				data={viewableEntries}
-				margin={{
-					top: 15,
-					right: 5,
-					left: 30,
-					bottom: 5,
-				}}
-			>
-				<CartesianGrid strokeDasharray="3 3" />
-				<XAxis tick={{ fontSize: 12 }} dataKey="month" />
-				<YAxis yAxisId="left" tick={{ fontSize: 10 }} width={18} />
-				<YAxis
-					yAxisId="right"
-					orientation="right"
-					tick={{ fontSize: 10 }}
-					width={18}
-				/>
-				<Legend />
-				<Tooltip formatter={(value: number) => `${Math.round(value)}`} />
-				<Line
-					yAxisId="left"
-					name="Total Steps"
-					type="monotone"
-					dataKey="totalSteps"
-					stroke="#2a801d"
-				/>
-				<Line
-					yAxisId="left"
-					name="Average Steps"
-					type="monotone"
-					dataKey="averageSteps"
-					stroke="#8884d8"
-				/>
-				<Line
-					yAxisId="left"
-					name="Maximum Steps"
-					type="monotone"
-					dataKey="topSteps"
-					stroke="#eb673b"
-				/>
-				<Line
-					yAxisId="right"
-					name="Walking Days"
-					type="monotone"
-					dataKey="walkingDays"
-					stroke="#00707d"
-				/>
-			</LineChart>
-		</ResponsiveContainer>
+		<Paper
+			variant="outlined"
+			sx={{ borderRadius: 3, p: 2.5, pt: 3, boxShadow: "none" }}
+		>
+			<ResponsiveContainer height={300}>
+				<LineChart
+					data={viewableEntries}
+					margin={{
+						top: 15,
+						right: 5,
+						left: 30,
+						bottom: 5,
+					}}
+				>
+					<CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} />
+					<XAxis
+						tick={axisTick}
+						dataKey="month"
+						stroke={theme.palette.divider}
+						tickLine={false}
+					/>
+					<YAxis
+						yAxisId="left"
+						tick={{ ...axisTick, fontSize: 10 }}
+						width={18}
+						stroke={theme.palette.divider}
+						tickLine={false}
+					/>
+					<YAxis
+						yAxisId="right"
+						orientation="right"
+						tick={{ ...axisTick, fontSize: 10 }}
+						width={18}
+						stroke={theme.palette.divider}
+						tickLine={false}
+					/>
+					<Legend wrapperStyle={{ fontSize: 13 }} />
+					<Tooltip
+						formatter={(value) => `${Math.round(Number(value))}`}
+						contentStyle={tooltipStyle}
+					/>
+					<Line
+						yAxisId="left"
+						name="Total Steps"
+						type="monotone"
+						dataKey="totalSteps"
+						stroke={chartPalette.steps}
+						strokeWidth={2}
+						dot={false}
+						activeDot={{ r: 4 }}
+					/>
+					<Line
+						yAxisId="left"
+						name="Average Steps"
+						type="monotone"
+						dataKey="averageSteps"
+						stroke={chartPalette.average}
+						strokeWidth={2}
+						dot={false}
+						activeDot={{ r: 4 }}
+					/>
+					<Line
+						yAxisId="left"
+						name="Maximum Steps"
+						type="monotone"
+						dataKey="topSteps"
+						stroke={chartPalette.maximum}
+						strokeWidth={2}
+						dot={false}
+						activeDot={{ r: 4 }}
+					/>
+					<Line
+						yAxisId="right"
+						name="Walking Days"
+						type="monotone"
+						dataKey="walkingDays"
+						stroke={chartPalette.walkingDays}
+						strokeWidth={2}
+						dot={false}
+						activeDot={{ r: 4 }}
+					/>
+				</LineChart>
+			</ResponsiveContainer>
+		</Paper>
 	);
 };

@@ -3,15 +3,17 @@ import { GroupContainer, StyledTitle } from "./StatsGroup.styles.js";
 
 interface StatsGroupProps {
 	title: string;
+	id?: string;
 }
 
 export const StatsGroup: FC<PropsWithChildren<StatsGroupProps>> = ({
 	title,
+	id,
 	children,
 }) => {
 	return (
-		<GroupContainer>
-			<StyledTitle variant="h3">{title}</StyledTitle>
+		<GroupContainer id={id}>
+			<StyledTitle>{title}</StyledTitle>
 			<div>{children}</div>
 		</GroupContainer>
 	);
