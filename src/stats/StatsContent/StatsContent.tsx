@@ -6,6 +6,7 @@ import { CalendarHeatmap } from "../../CalendarHeatmap/CalendarHeatmap.js";
 import { CumulativeGraph } from "../../CumulativeGraph/CumulativeGraph.js";
 import { DistributionGraph } from "../../DistributionGraph/DistributionGraph.js";
 import type { Entry } from "../../fetchData.js";
+import { formatDistance, formatNumber } from "../../utils/formatDistance.js";
 import {
 	computeBestDay,
 	computeBestMonth,
@@ -53,6 +54,10 @@ export const StatsContent: FC<StatsContentProps> = ({
 	);
 
 	const streaks = useMemo(() => computeStreaks(data), [data]);
+	const todayEntry = useMemo(
+		() => data.find((entry) => entry.date.hasSame(DateTime.now(), "day")),
+		[data],
+	);
 	const bestDay = useMemo(() => computeBestDay(data), [data]);
 	const bestWeek = useMemo(() => computeBestWeek(data), [data]);
 	const bestMonth = useMemo(() => computeBestMonth(data), [data]);
@@ -62,6 +67,22 @@ export const StatsContent: FC<StatsContentProps> = ({
 
 	return (
 		<div>
+			<StatsGroup title="Today" id="today">
+				<StatsBar>
+					<StatsBox
+						title="Today's Steps"
+						entries={[
+							todayEntry && todayEntry.steps > 0
+								? `${formatNumber(Math.round(todayEntry.steps))} steps`
+								: "No walk recorded yet",
+							...(todayEntry && todayEntry.steps > 0
+								? [formatDistance(todayEntry.distance)]
+								: []),
+						]}
+					/>
+				</StatsBar>
+			</StatsGroup>
+
 			<StatsGroup title="Streaks" id="streaks">
 				<StatsBar>
 					<StatsBox

@@ -1,7 +1,11 @@
-import { Box, Skeleton, Stack, Toolbar, Typography } from "@mui/material";
+import { Box, Chip, Skeleton, Stack, Toolbar, Typography } from "@mui/material";
 import { DateTime } from "luxon";
 import { type FC, useState } from "react";
-import { useData } from "../fetchData.js";
+import {
+	type ConnectionState,
+	useConnectionState,
+	useData,
+} from "../fetchData.js";
 import { DashboardToc } from "../layout/DashboardToc.js";
 import { MonthPicker } from "../MonthPicker/MonthPicker.js";
 import { StatsContent } from "../stats/StatsContent/StatsContent.js";
@@ -42,6 +46,59 @@ const LoadingState: FC = () => (
 	</Content>
 );
 
+const connectionLabels: Record<ConnectionState, string | null> = {
+	disconnected: "Disconnected",
+	idle: "Idle",
+	running: "Running",
+	unknown: null,
+};
+
+const connectionDotColors: Record<ConnectionState, string> = {
+	disconnected: "error.main",
+	idle: "text.disabled",
+	running: "success.main",
+	unknown: "text.disabled",
+};
+
+const TreadmillStatusChip: FC = () => {
+	const { data: state = "unknown" } = useConnectionState();
+	const label = connectionLabels[state];
+	if (!label) {
+		return null;
+	}
+	return (
+		<Chip
+			label={
+				<Stack direction="row" sx={{ alignItems: "center", gap: 1 }}>
+					<Box
+						component="span"
+						sx={{
+							width: 8,
+							height: 8,
+							borderRadius: "50%",
+							bgcolor: connectionDotColors[state],
+						}}
+					/>
+					{label}
+				</Stack>
+			}
+			size="small"
+			variant="outlined"
+		sx={{
+			mr: 2,
+			height: 34,
+			borderRadius: 2.5,
+			bgcolor: "action.hover",
+			borderColor: "transparent",
+			color: "text.secondary",
+			fontSize: 14,
+			fontWeight: 600,
+			"&:hover": { bgcolor: "action.selected" },
+		}}
+		/>
+	);
+};
+
 export const Main: FC = () => {
 	const { isLoading, data } = useData();
 	const [month, setMonth] = useState(DateTime.local());
@@ -60,6 +117,7 @@ export const Main: FC = () => {
 						>
 							WalkingPad Stats
 						</Typography>
+						<TreadmillStatusChip />
 						<ModeToggle />
 						{data && (
 							<MonthPicker

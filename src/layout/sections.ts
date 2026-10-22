@@ -12,6 +12,7 @@ export const sectionGroups: SectionGroupDef[] = [
 	{
 		title: "Overview",
 		sections: [
+			{ id: "today", label: "Today" },
 			{ id: "streaks", label: "Streaks" },
 			{ id: "top-day", label: "Top Day" },
 			{ id: "total", label: "Total" },

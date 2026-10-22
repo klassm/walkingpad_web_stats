@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 import type { Entry } from "../fetchData.js";
 
 export interface Streaks {
@@ -36,10 +38,13 @@ export function computeStreaks(entries: Entry[]): Streaks {
 		}
 	}
 
-	const today = Date.now();
+	// Compare calendar days (midnight to midnight), not wall-clock distance:
+	// rounding now() against the last day's midnight wrongly reports 2 days
+	// after ~noon on the following day.
+	const todayStart = DateTime.now().startOf("day").toMillis();
 	const last = walkingDays[walkingDays.length - 1];
 	const daysSinceLast = Math.round(
-		(today - last.date.startOf("day").toMillis()) / (24 * 60 * 60 * 1000),
+		(todayStart - last.date.startOf("day").toMillis()) / (24 * 60 * 60 * 1000),
 	);
 
 	let current = 0;
