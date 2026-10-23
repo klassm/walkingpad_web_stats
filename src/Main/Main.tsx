@@ -84,17 +84,17 @@ const TreadmillStatusChip: FC = () => {
 			}
 			size="small"
 			variant="outlined"
-		sx={{
-			mr: 2,
-			height: 34,
-			borderRadius: 2.5,
-			bgcolor: "action.hover",
-			borderColor: "transparent",
-			color: "text.secondary",
-			fontSize: 14,
-			fontWeight: 600,
-			"&:hover": { bgcolor: "action.selected" },
-		}}
+			sx={{
+				mr: 2,
+				height: 34,
+				borderRadius: 2.5,
+				bgcolor: "action.hover",
+				borderColor: "transparent",
+				color: "text.secondary",
+				fontSize: 14,
+				fontWeight: 600,
+				"&:hover": { bgcolor: "action.selected" },
+			}}
 		/>
 	);
 };
