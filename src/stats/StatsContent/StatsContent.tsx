@@ -54,6 +54,10 @@ export const StatsContent: FC<StatsContentProps> = ({
 	);
 
 	const streaks = useMemo(() => computeStreaks(data), [data]);
+	const weekendFreeStreaks = useMemo(
+		() => computeStreaks(data, { weekendsAreFree: true }),
+		[data],
+	);
 	const todayEntry = useMemo(
 		() => data.find((entry) => entry.date.hasSame(DateTime.now(), "day")),
 		[data],
@@ -95,6 +99,18 @@ export const StatsContent: FC<StatsContentProps> = ({
 						title="Longest Streak"
 						entries={[
 							`${streaks.longest} ${streaks.longest === 1 ? "day" : "days"} in a row`,
+						]}
+					/>
+					<StatsBox
+						title="Current Streak (without weekends)"
+						entries={[
+							`${weekendFreeStreaks.current} ${weekendFreeStreaks.current === 1 ? "day" : "days"} in a row`,
+						]}
+					/>
+					<StatsBox
+						title="Longest Streak (without weekends)"
+						entries={[
+							`${weekendFreeStreaks.longest} ${weekendFreeStreaks.longest === 1 ? "day" : "days"} in a row`,
 						]}
 					/>
 				</StatsBar>
