@@ -41,7 +41,6 @@ export function useConnectionState() {
 
 interface RawEntry {
 	date: string;
-	dateIso?: string;
 	steps: number;
 	distance: number;
 }
@@ -60,12 +59,8 @@ export function useData() {
 }
 
 function parseDate(entry: RawEntry): DateTime {
-	// Prefer full ISO timestamps (newer macOS clients); fall back to the
-	// day-only string that the API has always exposed.
-	const iso = entry.dateIso ? DateTime.fromISO(entry.dateIso) : null;
-	if (iso?.isValid) {
-		return iso;
-	}
+	// The API serves day-precision dates formatted in the treadmill host's
+	// local timezone, which is exactly the day the dashboard aggregates by.
 	return DateTime.fromFormat(entry.date, dateFormat);
 }
 
