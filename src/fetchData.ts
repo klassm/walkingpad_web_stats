@@ -22,11 +22,10 @@ export function useConnectionState() {
 	return useQuery<ConnectionState>({
 		queryKey: ["treadmill-connection"],
 		initialData: "unknown",
-		// The websocket owns live updates (connection events write this
-		// cache); HTTP is only the one-time bootstrap on page load. No
-		// polling: a failed fetch throws, so it can never clobber
-		// fresher websocket-pushed state with "unknown".
-		staleTime: Number.POSITIVE_INFINITY,
+		// Treat the initial placeholder as ancient so the bootstrap fetch
+		// runs on mount (websocket events own the cache afterwards; there
+		// is no polling, so nothing else ever refetches this key).
+		initialDataUpdatedAt: 0,
 		refetchOnWindowFocus: false,
 		retry: false,
 		queryFn: async () => {
@@ -56,9 +55,9 @@ export function useData() {
 	return useQuery({
 		queryKey: ["treadmill-data"],
 		initialData: null,
-		// Websocket-driven: workout events invalidate this query. HTTP is
-		// the one-time bootstrap; no polling.
-		staleTime: Number.POSITIVE_INFINITY,
+		initialDataUpdatedAt: 0,
+		// Workout events invalidate this query over the websocket; HTTP
+		// bootstraps once on mount (no polling, no focus refetch).
 		refetchOnWindowFocus: false,
 		queryFn: fetchData,
 	});
