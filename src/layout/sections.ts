@@ -10,6 +10,10 @@ export interface SectionGroupDef {
 
 export const sectionGroups: SectionGroupDef[] = [
 	{
+		title: "Live",
+		sections: [{ id: "live", label: "Live" }],
+	},
+	{
 		title: "Overview",
 		sections: [
 			{ id: "today", label: "Today" },

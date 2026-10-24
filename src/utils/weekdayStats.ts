@@ -24,7 +24,7 @@ export function computeWeekdayStats(entries: Entry[]): WeekdayStat[] {
 		return {
 			weekday,
 			label: DateTime.fromObject({ weekday: weekday as 1 })
-				.setLocale("de")
+				.setLocale("en")
 				.toFormat("ccc"),
 			averageSteps:
 				bucket.count > 0 ? Math.round(bucket.total / bucket.count) : 0,

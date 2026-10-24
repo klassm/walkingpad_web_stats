@@ -10,8 +10,6 @@ export const HeaderBar = styled(AppBar)(({ theme }) => ({
 	color: theme.palette.text.primary,
 }));
 
-export const HeaderContainer = styled(Container)({});
-
 export const LogoMark = styled("img")({
 	width: 34,
 	height: 34,

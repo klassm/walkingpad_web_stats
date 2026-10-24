@@ -2,7 +2,7 @@ import type { FC } from "react";
 import { Bar, BarChart, CartesianGrid, Tooltip, XAxis, YAxis } from "recharts";
 import { ChartPaper, useChartTheme } from "../charts/ChartPaper.js";
 import type { Entry } from "../fetchData.js";
-import { chartPalette } from "../theme/theme.js";
+import { useChartPalette } from "../theme/theme.js";
 import { formatNumber } from "../utils/formatDistance.js";
 import { computeWeeklyTotals } from "../utils/weeklyTotals.js";
 
@@ -12,6 +12,7 @@ export interface Props {
 
 export const WeeklyTotalsGraph: FC<Props> = ({ data }) => {
 	const { gridStroke, axisTick, tooltipStyle } = useChartTheme();
+	const palette = useChartPalette();
 	const totals = computeWeeklyTotals(data);
 
 	return (
@@ -47,9 +48,10 @@ export const WeeklyTotalsGraph: FC<Props> = ({ data }) => {
 				<Bar
 					dataKey="steps"
 					name="Weekly steps"
-					fill={chartPalette.average}
+					fill={palette.average}
 					radius={[6, 6, 0, 0]}
 					maxBarSize={40}
+					animationDuration={600}
 				/>
 			</BarChart>
 		</ChartPaper>

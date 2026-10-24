@@ -11,7 +11,8 @@ export interface Entry {
 
 export type ConnectionState = "disconnected" | "idle" | "running" | "unknown";
 
-const knownConnectionStates: readonly string[] = [
+// Exported so the WS bridge (useTreadmillLive) applies the same validation.
+export const knownConnectionStates: readonly string[] = [
 	"disconnected",
 	"idle",
 	"running",
@@ -21,20 +22,24 @@ export function useConnectionState() {
 	return useQuery<ConnectionState>({
 		queryKey: ["treadmill-connection"],
 		initialData: "unknown",
-		refetchInterval: 60_000,
+		// The websocket owns live updates (connection events write this
+		// cache); HTTP is only the one-time bootstrap on page load. No
+		// polling: a failed fetch throws, so it can never clobber
+		// fresher websocket-pushed state with "unknown".
+		staleTime: Number.POSITIVE_INFINITY,
+		refetchOnWindowFocus: false,
 		retry: false,
 		queryFn: async () => {
-			try {
-				const { data } = await axios.get<{ state: string }>(
-					"http://localhost:4934/treadmill/connection",
-				);
-				return knownConnectionStates.includes(data.state)
-					? (data.state as ConnectionState)
-					: "unknown";
-			} catch {
+			const { data } = await axios.get<{ state: string }>(
+				// 127.0.0.1, not localhost: the client's HTTP listener is pinned
+				// to IPv4 loopback, and localhost can resolve to ::1 first.
+				"http://127.0.0.1:4934/treadmill/connection",
+			);
+			if (!knownConnectionStates.includes(data.state)) {
 				// Older macOS clients do not expose the connection endpoint.
-				return "unknown";
+				throw new Error(`unexpected connection state: ${data.state}`);
 			}
+			return data.state as ConnectionState;
 		},
 	});
 }
@@ -51,9 +56,10 @@ export function useData() {
 	return useQuery({
 		queryKey: ["treadmill-data"],
 		initialData: null,
-		// The macOS client updates workouts.json while walking; refetch
-		// regularly so today's numbers and streaks stay current.
-		refetchInterval: 60_000,
+		// Websocket-driven: workout events invalidate this query. HTTP is
+		// the one-time bootstrap; no polling.
+		staleTime: Number.POSITIVE_INFINITY,
+		refetchOnWindowFocus: false,
 		queryFn: fetchData,
 	});
 }
@@ -122,6 +128,6 @@ function mapEntries(entries: RawEntry[]): Entry[] {
 export async function fetchData(): Promise<Entry[]> {
 	const { data } = await axios.get<
 		{ date: string; steps: number; distance: number }[]
-	>("http://localhost:4934/treadmill/workouts");
+	>("http://127.0.0.1:4934/treadmill/workouts");
 	return mapEntries(data);
 }

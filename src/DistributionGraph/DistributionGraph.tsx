@@ -2,7 +2,7 @@ import type { FC } from "react";
 import { Bar, BarChart, CartesianGrid, Tooltip, XAxis, YAxis } from "recharts";
 import { ChartPaper, useChartTheme } from "../charts/ChartPaper.js";
 import type { Entry } from "../fetchData.js";
-import { chartPalette } from "../theme/theme.js";
+import { useChartPalette } from "../theme/theme.js";
 import { computeDistribution } from "../utils/distribution.js";
 
 export interface Props {
@@ -11,6 +11,7 @@ export interface Props {
 
 export const DistributionGraph: FC<Props> = ({ data }) => {
 	const { gridStroke, axisTick, tooltipStyle } = useChartTheme();
+	const palette = useChartPalette();
 	const buckets = computeDistribution(data);
 
 	return (
@@ -38,16 +39,17 @@ export const DistributionGraph: FC<Props> = ({ data }) => {
 					allowDecimals={false}
 				/>
 				<Tooltip
-					formatter={(value) => `${Math.round(Number(value))} days`}
+					formatter={(value) => `${Math.round(Number(value))} Tage`}
 					contentStyle={tooltipStyle}
 					cursor={{ fill: "rgba(128, 128, 128, 0.1)" }}
 				/>
 				<Bar
 					dataKey="count"
-					name="Walking days"
-					fill={chartPalette.maximum}
+					name="Walking Days"
+					fill={palette.maximum}
 					radius={[6, 6, 0, 0]}
 					maxBarSize={48}
+					animationDuration={600}
 				/>
 			</BarChart>
 		</ChartPaper>

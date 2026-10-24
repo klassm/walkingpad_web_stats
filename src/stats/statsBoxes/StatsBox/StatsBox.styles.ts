@@ -1,4 +1,5 @@
 import { Card, styled, Typography } from "@mui/material";
+import { hoverableCard } from "../../../theme/theme.js";
 
 export const StyledCard = styled(Card)(({ theme }) => ({
 	flex: 1,
@@ -6,12 +7,7 @@ export const StyledCard = styled(Card)(({ theme }) => ({
 	borderRadius: 16,
 	border: `1px solid ${theme.palette.divider}`,
 	boxShadow: "none",
-	transition:
-		"box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease",
-	"&:hover": {
-		borderColor: `${theme.palette.primary.main}55`,
-		boxShadow: theme.shadows[4],
-	},
+	...hoverableCard(theme),
 }));
 
 export const StyledTitle = styled(Typography)(({ theme }) => ({
@@ -21,6 +17,10 @@ export const StyledTitle = styled(Typography)(({ theme }) => ({
 	textTransform: "uppercase",
 	color: theme.palette.primary.main,
 	marginBottom: theme.spacing(0.5),
+}));
+
+export const StyledMuted = styled(Typography)(({ theme }) => ({
+	color: theme.palette.text.disabled,
 }));
 
 export const StyledDate = styled(Typography)(({ theme }) => ({

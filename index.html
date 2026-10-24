@@ -4,7 +4,8 @@
     <meta charset="utf-8" />
     <link rel="icon" type="image/png" href="/favicon-64.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f8f7" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121413" />
     <meta
       name="description"
       content="WalkingPad Stats"
@@ -12,10 +13,27 @@
     <link rel="apple-touch-icon" href="/appicon.png" />
     <link rel="manifest" href="manifest.json" />
     <title>WalkingPad Stats</title>
+    <script>
+      // Resolve the color scheme before first paint to avoid a flash of light UI
+      // when dark mode is preferred (localStorage wins over the system setting).
+      (function () {
+        try {
+          var stored = localStorage.getItem("walkingpad.color-mode");
+          var prefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)",
+          ).matches;
+          var mode = stored === "light" || stored === "dark" ? stored : prefersDark ? "dark" : "light";
+          document.documentElement.style.colorScheme = mode;
+          document.documentElement.style.backgroundColor = mode === "dark" ? "#121413" : "#f6f8f7";
+        } catch (e) {
+          /* keep default */
+        }
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <script type="module" src="/src/index.jsx"></script>
+    <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>

@@ -1,5 +1,13 @@
-import { Box, MenuItem, Select, Typography } from "@mui/material";
-import { type FC, useEffect, useState } from "react";
+import {
+	Box,
+	Drawer,
+	List,
+	ListSubheader,
+	Stack,
+	Typography,
+} from "@mui/material";
+import { type FC, type ReactNode, useEffect, useState } from "react";
+import { ModeToggle } from "../theme/ModeToggle.js";
 import { allSections, sectionGroups } from "./sections.js";
 
 function scrollToSection(id: string) {
@@ -82,6 +90,7 @@ const DesktopToc: FC<{ active: string }> = ({ active }) => (
 						key={section.id}
 						component="button"
 						onClick={() => scrollToSection(section.id)}
+						aria-current={active === section.id ? "true" : undefined}
 						sx={{
 							display: "block",
 							width: "100%",
@@ -98,9 +107,14 @@ const DesktopToc: FC<{ active: string }> = ({ active }) => (
 							py: 0.5,
 							pl: 1.5,
 							cursor: "pointer",
-							transition: "color 0.15s ease",
+							transition: "border-color 150ms ease, color 150ms ease",
 							"&:hover": {
 								color: "text.primary",
+							},
+							"&.Mui-focusVisible": {
+								outline: "2px solid",
+								outlineColor: "primary.main",
+								outlineOffset: "-2px",
 							},
 						}}
 					>
@@ -112,45 +126,150 @@ const DesktopToc: FC<{ active: string }> = ({ active }) => (
 	</Box>
 );
 
-const MobileToc: FC<{ active: string }> = ({ active }) => (
-	<Box
-		sx={{
-			display: { xs: "block", md: "none" },
-			mb: 2,
-			position: "sticky",
-			top: 72,
-			zIndex: 10,
+const MobileToc: FC<{
+	open: boolean;
+	onClose: () => void;
+	active: string;
+	monthPicker?: ReactNode;
+}> = ({ open, onClose, active, monthPicker }) => (
+	<Drawer
+		anchor="left"
+		open={open}
+		onClose={onClose}
+		slotProps={{
+			paper: {
+				sx: {
+					width: 260,
+					pt: 2,
+					display: "flex",
+					flexDirection: "column",
+				},
+			},
 		}}
 	>
-		<Select
-			fullWidth
-			size="small"
-			value={active}
-			onChange={(event) => scrollToSection(event.target.value)}
-			sx={{ bgcolor: "background.paper", borderRadius: 2 }}
+		<Box
+			sx={{
+				flex: 1,
+				overflowY: "auto",
+			}}
 		>
-			{sectionGroups.map((group) => (
-				<MenuItem key={group.title} disabled sx={{ opacity: 0.6 }}>
-					{group.title}
-				</MenuItem>
-			))}
-			{sectionGroups.flatMap((group) =>
-				group.sections.map((section) => (
-					<MenuItem key={section.id} value={section.id}>
-						{section.label}
-					</MenuItem>
-				)),
+			<List component="nav" disablePadding>
+				{sectionGroups.map((group) => (
+					<Box key={group.title} sx={{ mb: 1.5 }}>
+						<ListSubheader
+							disableSticky
+							sx={{
+								bgcolor: "transparent",
+								color: "text.secondary",
+								fontWeight: 700,
+								letterSpacing: "0.08em",
+								textTransform: "uppercase",
+								fontSize: 12,
+								lineHeight: 2,
+							}}
+						>
+							{group.title}
+						</ListSubheader>
+						{group.sections.map((section) => (
+							<Typography
+								key={section.id}
+								component="button"
+								onClick={() => {
+									onClose();
+									scrollToSection(section.id);
+								}}
+								aria-current={active === section.id ? "true" : undefined}
+								sx={{
+									display: "block",
+									width: "100%",
+									textAlign: "left",
+									bgcolor: "transparent",
+									border: "none",
+									borderLeft: 2,
+									borderColor: (_theme) =>
+										active === section.id ? "primary.main" : "transparent",
+									color: (_theme) =>
+										active === section.id ? "primary.main" : "text.primary",
+									fontWeight: active === section.id ? 600 : 400,
+									fontSize: 14,
+									py: 1,
+									pl: 2.5,
+									pr: 2,
+									cursor: "pointer",
+									"&:hover": {
+										color: "primary.main",
+									},
+									"&.Mui-focusVisible": {
+										outline: "2px solid",
+										outlineColor: "primary.main",
+										outlineOffset: "-2px",
+									},
+								}}
+							>
+								{section.label}
+							</Typography>
+						))}
+					</Box>
+				))}
+			</List>
+		</Box>
+		<Box
+			sx={{
+				mt: "auto",
+				p: 2,
+				borderTop: 1,
+				borderColor: "divider",
+				display: "flex",
+				flexDirection: "column",
+				gap: 2,
+			}}
+		>
+			{monthPicker && (
+				<Stack
+					direction="row"
+					sx={{
+						alignItems: "center",
+						justifyContent: "space-between",
+					}}
+				>
+					<Typography variant="body2" sx={{ color: "text.secondary" }}>
+						Month
+					</Typography>
+					{monthPicker}
+				</Stack>
 			)}
-		</Select>
-	</Box>
+			<Stack
+				direction="row"
+				sx={{
+					alignItems: "center",
+					justifyContent: "space-between",
+				}}
+			>
+				<Typography variant="body2" sx={{ color: "text.secondary" }}>
+					Theme
+				</Typography>
+				<ModeToggle />
+			</Stack>
+		</Box>
+	</Drawer>
 );
 
-export const DashboardToc: FC = () => {
+export const DashboardToc: FC<{
+	mobileOpen: boolean;
+	onMobileClose: () => void;
+	/** Rendered in the drawer footer on phones (month picker). */
+	monthPicker?: ReactNode;
+}> = ({ mobileOpen, onMobileClose, monthPicker }) => {
 	const active = useActiveSection();
 	return (
 		<>
 			<DesktopToc active={active} />
-			<MobileToc active={active} />
+			<MobileToc
+				open={mobileOpen}
+				onClose={onMobileClose}
+				active={active}
+				monthPicker={monthPicker}
+			/>
 		</>
 	);
 };

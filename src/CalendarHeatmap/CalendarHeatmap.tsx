@@ -28,8 +28,8 @@ const CELL_STRIDE = CELL_SIZE + CELL_GAP;
 function colorForSteps(steps: number, theme: Theme): string {
 	if (steps <= 0) {
 		return theme.palette.mode === "light"
-			? "rgba(0, 0, 0, 0.06)"
-			: "rgba(255, 255, 255, 0.06)";
+			? "rgba(0, 0, 0, 0.12)"
+			: "rgba(255, 255, 255, 0.12)";
 	}
 	if (steps < 3000) return `${theme.palette.primary.main}55`;
 	if (steps < 6000) return `${theme.palette.primary.main}88`;
@@ -92,89 +92,135 @@ export const CalendarHeatmap: FC<Props> = ({ data }) => {
 			variant="outlined"
 			sx={{ borderRadius: 3, p: 2.5, pt: 2, boxShadow: "none" }}
 		>
-			<Box sx={{ display: "flex" }}>
+			<Typography variant="body2" sx={{ display: "none" }}>
+				Daily steps over the last 12 months as a calendar heatmap. A hotter
+				color means more steps; the exact daily values are in the charts.
+			</Typography>
+			<Box sx={{ overflowX: "auto", pb: 1 }}>
 				<Box
 					sx={{
-						display: "grid",
-						gridTemplateRows: `repeat(7, ${CELL_SIZE}px)`,
-						gap: `${CELL_GAP}px`,
-						width: 26,
-						mt: 2.5,
+						display: "flex",
+						minWidth: "fit-content",
+						width: weeks.length * CELL_STRIDE + 26,
 					}}
 				>
-					{["Mon", "Wed", "Fri"].map((day, index) => (
-						<Typography
-							key={day}
-							variant="caption"
-							sx={{
-								gridRow: index * 2 + 1,
-								color: "text.secondary",
-								fontSize: 9,
-								alignSelf: "center",
-								lineHeight: 1,
-							}}
-						>
-							{day}
-						</Typography>
-					))}
-				</Box>
-				<Box sx={{ position: "relative", flex: 1 }}>
-					<Box sx={{ position: "relative", height: 16 }}>
-						{monthLabels.map(({ column, label }) => (
+					<Box
+						sx={{
+							display: "grid",
+							gridTemplateRows: `repeat(7, ${CELL_SIZE}px)`,
+							gap: `${CELL_GAP}px`,
+							width: 26,
+							mt: 2.5,
+						}}
+					>
+						{["Mon", "Wed", "Fri"].map((day, index) => (
 							<Typography
-								key={`${column}-${label}`}
+								key={day}
 								variant="caption"
 								sx={{
-									position: "absolute",
-									left: column * CELL_STRIDE,
+									gridRow: index * 2 + 1,
 									color: "text.secondary",
-									fontSize: 10,
-									lineHeight: "16px",
+									fontSize: 9,
+									alignSelf: "center",
+									lineHeight: 1,
 								}}
 							>
-								{label}
+								{day}
 							</Typography>
 						))}
 					</Box>
-					<Box sx={{ display: "flex", gap: `${CELL_GAP}px` }}>
-						{weeks.map((week, weekIndex) => (
-							<Box
-								key={weekIndex}
-								sx={{
-									display: "grid",
-									gridTemplateRows: `repeat(7, ${CELL_SIZE}px)`,
-									gap: `${CELL_GAP}px`,
-								}}
-							>
-								{Array.from({ length: 7 }, (_, dayIndex) => {
-									const day = week[dayIndex];
-									if (!day) {
-										return <Box key={dayIndex} />;
-									}
-									return (
-										<Tooltip
-											key={dayIndex}
-											title={`${day.date.toFormat("dd.MM.yyyy")}: ${formatNumber(day.steps)} steps (${formatDistance(day.distance)})`}
-											disableInteractive
-										>
-											<Box
-												sx={{
-													width: CELL_SIZE,
-													height: CELL_SIZE,
-													borderRadius: 0.75,
-													backgroundColor: colorForSteps(day.steps, theme),
-													"&:hover": {
-														outline: `1px solid ${theme.palette.text.primary}`,
-													},
-												}}
-											/>
-										</Tooltip>
-									);
-								})}
-							</Box>
-						))}
+					<Box sx={{ position: "relative", flex: 1 }}>
+						<Box sx={{ position: "relative", height: 16 }}>
+							{monthLabels.map(({ column, label }) => (
+								<Typography
+									key={`${column}-${label}`}
+									variant="caption"
+									sx={{
+										position: "absolute",
+										left: column * CELL_STRIDE,
+										color: "text.secondary",
+										fontSize: 10,
+										lineHeight: "16px",
+									}}
+								>
+									{label}
+								</Typography>
+							))}
+						</Box>
+						<Box sx={{ display: "flex", gap: `${CELL_GAP}px` }}>
+							{weeks.map((week, weekIndex) => (
+								<Box
+									key={weekIndex}
+									sx={{
+										display: "grid",
+										gridTemplateRows: `repeat(7, ${CELL_SIZE}px)`,
+										gap: `${CELL_GAP}px`,
+									}}
+								>
+									{Array.from({ length: 7 }, (_, dayIndex) => {
+										const day = week[dayIndex];
+										if (!day) {
+											return <Box key={dayIndex} />;
+										}
+										return (
+											<Tooltip
+												key={dayIndex}
+												title={`${day.date.toFormat("dd.MM.yyyy")}: ${formatNumber(day.steps)} steps (${formatDistance(day.distance)})`}
+												disableInteractive
+											>
+												<Box
+													sx={{
+														width: CELL_SIZE,
+														height: CELL_SIZE,
+														borderRadius: 0.75,
+														backgroundColor: colorForSteps(day.steps, theme),
+														"&:hover": {
+															outline: `1px solid ${theme.palette.text.primary}`,
+														},
+													}}
+												/>
+											</Tooltip>
+										);
+									})}
+								</Box>
+							))}
+						</Box>
 					</Box>
 				</Box>
+			</Box>
+			<Box
+				sx={{
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "flex-end",
+					gap: 1,
+					mt: 1,
+					color: "text.secondary",
+					fontSize: 11,
+				}}
+			>
+				<span>fewer</span>
+				{[0, 2999, 5999, 9999, 10001].map((steps, index) => (
+					<Box
+						key={steps}
+						sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+					>
+						<Box
+							sx={{
+								width: 10,
+								height: 10,
+								borderRadius: 0.75,
+								backgroundColor: colorForSteps(steps, theme),
+							}}
+						/>
+						{index > 0 && index < 4 && (
+							<span key={`label-${steps}`}>
+								{index === 1 ? "3k" : index === 2 ? "6k" : "10k"}
+							</span>
+						)}
+					</Box>
+				))}
+				<span>more</span>
 			</Box>
 		</Paper>
 	);

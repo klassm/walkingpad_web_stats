@@ -28,7 +28,7 @@ export function computeYearOverYear(
 		const previousKey = `${year - 1}-${String(month).padStart(2, "0")}`;
 		return {
 			monthLabel: DateTime.fromObject({ year, month })
-				.setLocale("de")
+				.setLocale("en")
 				.toFormat("LLL"),
 			current: byMonth[currentKey] ? sumFor(byMonth[currentKey]).steps : 0,
 			previous: byMonth[previousKey] ? sumFor(byMonth[previousKey]).steps : 0,

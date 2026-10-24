@@ -36,7 +36,7 @@ export function useChartTheme() {
 		tooltipStyle: {
 			backgroundColor: theme.palette.background.paper,
 			border: `1px solid ${theme.palette.divider}`,
-			borderRadius: 10,
+			borderRadius: 8,
 			fontSize: 13,
 			color: theme.palette.text.primary,
 		},

@@ -9,7 +9,7 @@ import {
 } from "recharts";
 import { ChartPaper, useChartTheme } from "../charts/ChartPaper.js";
 import type { Entry } from "../fetchData.js";
-import { chartPalette } from "../theme/theme.js";
+import { useChartPalette } from "../theme/theme.js";
 import { computeCumulative } from "../utils/cumulative.js";
 import { formatNumber } from "../utils/formatDistance.js";
 
@@ -20,6 +20,7 @@ export interface Props {
 
 export const CumulativeGraph: FC<Props> = ({ data, year }) => {
 	const { gridStroke, axisTick, tooltipStyle } = useChartTheme();
+	const palette = useChartPalette();
 	const points = computeCumulative(data, year);
 
 	return (
@@ -30,16 +31,8 @@ export const CumulativeGraph: FC<Props> = ({ data, year }) => {
 			>
 				<defs>
 					<linearGradient id="cumulativeFill" x1="0" y1="0" x2="0" y2="1">
-						<stop
-							offset="0%"
-							stopColor={chartPalette.steps}
-							stopOpacity={0.35}
-						/>
-						<stop
-							offset="100%"
-							stopColor={chartPalette.steps}
-							stopOpacity={0.02}
-						/>
+						<stop offset="0%" stopColor={palette.steps} stopOpacity={0.35} />
+						<stop offset="100%" stopColor={palette.steps} stopOpacity={0.02} />
 					</linearGradient>
 				</defs>
 				<CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
@@ -52,7 +45,7 @@ export const CumulativeGraph: FC<Props> = ({ data, year }) => {
 				/>
 				<YAxis
 					tick={{ ...axisTick, fontSize: 10 }}
-					width={18}
+					width={40}
 					stroke={gridStroke}
 					tickLine={false}
 				/>
@@ -66,9 +59,10 @@ export const CumulativeGraph: FC<Props> = ({ data, year }) => {
 					name={`Cumulative ${year}`}
 					type="monotone"
 					dataKey="cumulative"
-					stroke={chartPalette.steps}
+					stroke={palette.steps}
 					strokeWidth={2}
 					fill="url(#cumulativeFill)"
+					animationDuration={600}
 				/>
 			</AreaChart>
 		</ChartPaper>

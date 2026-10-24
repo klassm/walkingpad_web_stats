@@ -89,6 +89,8 @@ const Option: FC<OptionProps> = ({ active, title, onClick, children }) => (
 			onClick={onClick}
 			sx={(theme) => ({
 				borderRadius: 2,
+				// 20px icon + 2*6px padding = 32px; +2*4px stack padding = 40px,
+				// matching the status chip and month picker height.
 				p: 0.75,
 				color: active
 					? theme.palette.primary.main

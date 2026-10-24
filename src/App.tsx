@@ -24,7 +24,7 @@ function ThemedApp() {
 
 function App() {
 	return (
-		<LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="de">
+		<LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="en">
 			<QueryClientProvider client={queryClient}>
 				<ColorModeProvider>
 					<ThemedApp />

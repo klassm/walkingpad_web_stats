@@ -10,7 +10,7 @@ import {
 } from "recharts";
 import { ChartPaper, useChartTheme } from "../charts/ChartPaper.js";
 import type { Entry } from "../fetchData.js";
-import { chartPalette } from "../theme/theme.js";
+import { useChartPalette } from "../theme/theme.js";
 import { computeYearOverYear } from "../utils/yearOverYear.js";
 
 export interface Props {
@@ -20,6 +20,7 @@ export interface Props {
 
 export const YearOverYearGraph: FC<Props> = ({ data, year }) => {
 	const { gridStroke, axisTick, tooltipStyle, legendStyle } = useChartTheme();
+	const palette = useChartPalette();
 	const points = computeYearOverYear(data, year);
 
 	return (
@@ -37,7 +38,7 @@ export const YearOverYearGraph: FC<Props> = ({ data, year }) => {
 				/>
 				<YAxis
 					tick={{ ...axisTick, fontSize: 10 }}
-					width={18}
+					width={40}
 					stroke={gridStroke}
 					tickLine={false}
 				/>
@@ -50,19 +51,21 @@ export const YearOverYearGraph: FC<Props> = ({ data, year }) => {
 					name={`${year - 1}`}
 					type="monotone"
 					dataKey="previous"
-					stroke={chartPalette.walkingDays}
+					stroke={palette.walkingDays}
 					strokeWidth={2}
 					dot={false}
 					activeDot={{ r: 4 }}
+					animationDuration={600}
 				/>
 				<Line
 					name={`${year}`}
 					type="monotone"
 					dataKey="current"
-					stroke={chartPalette.steps}
+					stroke={palette.steps}
 					strokeWidth={2}
 					dot={false}
 					activeDot={{ r: 4 }}
+					animationDuration={600}
 				/>
 			</LineChart>
 		</ChartPaper>
