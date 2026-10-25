@@ -6,9 +6,7 @@ import { CalendarHeatmap } from "../../CalendarHeatmap/CalendarHeatmap.js";
 import { CumulativeGraph } from "../../CumulativeGraph/CumulativeGraph.js";
 import { DistributionGraph } from "../../DistributionGraph/DistributionGraph.js";
 import type { Entry } from "../../fetchData.js";
-import { LiveControl } from "../../live/LiveControl.js";
-import { computeDelta } from "../../utils/deltas.js";
-import { formatDistance, formatNumber } from "../../utils/formatDistance.js";
+import { TodayPanel } from "../../live/TodayPanel.js";
 import {
 	computeBestDay,
 	computeBestMonth,
@@ -22,7 +20,6 @@ import { StatsBar } from "../StatsBar/StatsBar.js";
 import { StatsGroup } from "../StatsGroup/StatsGroup.js";
 import { AverageStatsBox } from "../statsBoxes/AverageStepsBox/AverageStatsBox.js";
 import { DistanceStatsBox } from "../statsBoxes/DistanceStatsBox/DistanceStatsBox.js";
-import { StatsBox } from "../statsBoxes/StatsBox/StatsBox.js";
 import { StreakCard } from "../statsBoxes/StreakBox/StreakCard.js";
 import { TopDayStatsBox } from "../statsBoxes/TopDayStatsBox/TopDayStatsBox.js";
 import { TotalStatsBox } from "../statsBoxes/TotalStatsBox/TotalStatsBox.js";
@@ -61,10 +58,6 @@ export const StatsContent: FC<StatsContentProps> = ({
 		() => computeStreaks(data, { weekendsAreFree: true }),
 		[data],
 	);
-	const todayEntry = useMemo(
-		() => data.find((entry) => entry.date.hasSame(DateTime.now(), "day")),
-		[data],
-	);
 	const bestDay = useMemo(() => computeBestDay(data), [data]);
 	const bestWeek = useMemo(() => computeBestWeek(data), [data]);
 	const bestMonth = useMemo(() => computeBestMonth(data), [data]);
@@ -81,31 +74,6 @@ export const StatsContent: FC<StatsContentProps> = ({
 		() => data.filter((entry) => entry.date.year === selectedMonth.year - 1),
 		[data, selectedMonth],
 	);
-	const sevenDayAverage = useMemo(() => {
-		const now = DateTime.now();
-		const recentWalkingDays = data.filter(
-			(entry) =>
-				entry.steps > 0 && entry.date < now && !entry.date.hasSame(now, "day"),
-		);
-		const lastSeven = recentWalkingDays.slice(-7);
-		if (lastSeven.length === 0) {
-			return undefined;
-		}
-		return Math.round(
-			lastSeven.reduce((sum, entry) => sum + entry.steps, 0) / lastSeven.length,
-		);
-	}, [data]);
-	const todayDelta = useMemo(
-		() =>
-			todayEntry && todayEntry.steps > 0 && sevenDayAverage
-				? computeDelta(
-						Math.round(todayEntry.steps),
-						sevenDayAverage,
-						"vs 7-day Ø",
-					)
-				: undefined,
-		[todayEntry, sevenDayAverage],
-	);
 
 	const year = selectedMonth.year;
 
@@ -117,25 +85,8 @@ export const StatsContent: FC<StatsContentProps> = ({
 
 	return (
 		<div>
-			<StatsGroup title="Live" id="live" index={nextIndex()}>
-				<LiveControl />
-			</StatsGroup>
-
 			<StatsGroup title="Today" id="today" index={nextIndex()}>
-				<StatsBar>
-					<StatsBox
-						title="Today's Steps"
-						entries={[
-							todayEntry && todayEntry.steps > 0
-								? `${formatNumber(Math.round(todayEntry.steps))} Schritte`
-								: "No walk recorded yet",
-							...(todayEntry && todayEntry.steps > 0
-								? [formatDistance(todayEntry.distance)]
-								: []),
-						]}
-						delta={todayDelta}
-					/>
-				</StatsBar>
+				<TodayPanel data={data} />
 			</StatsGroup>
 
 			<StatsGroup title="Streaks" id="streaks" index={nextIndex()}>

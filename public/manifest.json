@@ -1,6 +1,6 @@
 {
-	"short_name": "WalkingPad Stats",
-	"name": "WalkingPad Statistics",
+	"short_name": "WalkingPad",
+	"name": "WalkingPad",
 	"start_url": ".",
 	"display": "standalone",
 	"theme_color": "#000000",

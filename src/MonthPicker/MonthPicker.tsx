@@ -1,6 +1,6 @@
 import { DatePicker } from "@mui/x-date-pickers";
 import { DateTime } from "luxon";
-import type { FC } from "react";
+import { type FC, useState } from "react";
 
 interface Props {
 	value: DateTime<true>;
@@ -9,6 +9,7 @@ interface Props {
 }
 
 export const MonthPicker: FC<Props> = ({ value, min, onChange }) => {
+	const [open, setOpen] = useState(false);
 	return (
 		<DatePicker
 			views={["year", "month"]}
@@ -22,8 +23,16 @@ export const MonthPicker: FC<Props> = ({ value, min, onChange }) => {
 				onChange((newDate ?? DateTime.local()) as DateTime<true>)
 			}
 			disableFuture
+			// The whole field (not just the calendar icon) opens the popup.
+			// The default icon button is hidden — the pill-shaped field itself
+			// is the affordance, matching the header chip and mode toggle.
+			open={open}
+			onOpen={() => setOpen(true)}
+			onClose={() => setOpen(false)}
+			slots={{ openPickerButton: () => null }}
 			slotProps={{
 				textField: {
+					onClick: () => setOpen(true),
 					size: "small",
 					variant: "outlined",
 					sx: {
@@ -39,6 +48,7 @@ export const MonthPicker: FC<Props> = ({ value, min, onChange }) => {
 							alignItems: "center",
 							bgcolor: "action.hover",
 							color: "text.primary",
+							cursor: "pointer",
 							// Translucent dark pill matching the header controls
 							// (status chip, mode toggle); renders with the month
 							// name in both the header slot and the nav drawer.

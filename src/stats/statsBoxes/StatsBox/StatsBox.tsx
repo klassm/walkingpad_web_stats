@@ -1,5 +1,5 @@
-import { CardContent, Typography } from "@mui/material";
-import type { FC } from "react";
+import { Box, CardContent, Typography } from "@mui/material";
+import type { FC, ReactNode } from "react";
 import type { Delta } from "../../../utils/deltas.js";
 import {
 	StyledCard,
@@ -15,6 +15,8 @@ interface Props {
 	entries: string[];
 	muted?: boolean;
 	delta?: Delta;
+	/** Optional action rendered at the bottom of the card (e.g. a Start button). */
+	action?: ReactNode;
 }
 
 const deltaArrows: Record<Delta["direction"], string> = {
@@ -36,6 +38,7 @@ export const StatsBox: FC<Props> = ({
 	entries,
 	muted,
 	delta,
+	action,
 }) => {
 	if (entries.length === 0) {
 		return null;
@@ -46,45 +49,58 @@ export const StatsBox: FC<Props> = ({
 	return (
 		<StyledCard variant="outlined">
 			<CardContent sx={{ p: 2.5, "&:last-child": { pb: 2.5 } }}>
-				<StyledTitle>{title}</StyledTitle>
-				{date && (
-					<StyledDate sx={{ mb: 1 }} variant="body2">
-						{date}
-					</StyledDate>
-				)}
-				<Typography
-					variant="h5"
+				<Box
 					sx={{
-						fontWeight: 700,
-						mb: description || secondary.length > 0 || delta ? 0.5 : 0,
-						color: muted ? "text.disabled" : "text.primary",
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "space-between",
+						gap: 2,
+						height: "100%",
 					}}
 				>
-					{primary}
-				</Typography>
-				{delta && (
-					<Typography
-						variant="body2"
-						sx={{
-							color: deltaColors[delta.direction],
-							fontWeight: 600,
-							fontSize: 13,
-							mb: 1,
-						}}
-					>
-						{deltaArrows[delta.direction]} {delta.percent} {delta.label}
-					</Typography>
-				)}
-				{description && (
-					<StyledDate variant="body2" sx={{ mb: 1 }}>
-						{description}
-					</StyledDate>
-				)}
-				{secondary.map((entry) => (
-					<StyledEntry key={entry} variant="body2">
-						{entry}
-					</StyledEntry>
-				))}
+					<Box>
+						<StyledTitle>{title}</StyledTitle>
+						{date && (
+							<StyledDate sx={{ mb: 1 }} variant="body2">
+								{date}
+							</StyledDate>
+						)}
+						<Typography
+							variant="h5"
+							sx={{
+								fontWeight: 700,
+								mb: description || secondary.length > 0 || delta ? 0.5 : 0,
+								color: muted ? "text.disabled" : "text.primary",
+							}}
+						>
+							{primary}
+						</Typography>
+						{delta && (
+							<Typography
+								variant="body2"
+								sx={{
+									color: deltaColors[delta.direction],
+									fontWeight: 600,
+									fontSize: 13,
+									mb: 1,
+								}}
+							>
+								{deltaArrows[delta.direction]} {delta.percent} {delta.label}
+							</Typography>
+						)}
+						{description && (
+							<StyledDate variant="body2" sx={{ mb: 1 }}>
+								{description}
+							</StyledDate>
+						)}
+						{secondary.map((entry) => (
+							<StyledEntry key={entry} variant="body2">
+								{entry}
+							</StyledEntry>
+						))}
+					</Box>
+					{action && <Box sx={{ flexShrink: 0 }}>{action}</Box>}
+				</Box>
 			</CardContent>
 		</StyledCard>
 	);
