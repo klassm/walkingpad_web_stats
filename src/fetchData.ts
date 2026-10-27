@@ -78,22 +78,18 @@ function mapEntries(entries: RawEntry[]): Entry[] {
 		}
 		const day = parsed.startOf("day").toFormat(dateFormat);
 		const existing = byDay.get(day);
-		// Duplicate day entries (e.g. legacy zero-shadow entries) must not
-		// erase the real one: sum the day's sessions instead.
-		byDay.set(
-			day,
-			existing
-				? {
-						date: existing.date,
-						steps: existing.steps + entry.steps,
-						distance: existing.distance + entry.distance,
-					}
-				: {
-						date: DateTime.fromFormat(day, dateFormat),
-						steps: entry.steps,
-						distance: entry.distance,
-					},
-		);
+		// Entries are cumulative snapshots of one day's counters (the macOS
+		// client stores one entry per day; stale files may contain identical
+		// duplicate pairs). A day's true total is therefore the highest
+		// snapshot, never the sum — summing would double-count every day
+		// that contains more than one entry.
+		if (!existing || entry.steps > existing.steps) {
+			byDay.set(day, {
+				date: DateTime.fromFormat(day, dateFormat),
+				steps: entry.steps,
+				distance: entry.distance,
+			});
+		}
 	}
 
 	const sortedDays = [...byDay.keys()].sort();
